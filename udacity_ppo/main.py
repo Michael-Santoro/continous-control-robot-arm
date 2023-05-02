@@ -1,7 +1,7 @@
 from unityagents import UnityEnvironment
 import pdb
 
-train_mode = False
+train_mode = True
 
 env = UnityEnvironment(file_name=r"..\\reacher_v2\\Reacher.exe")
 
@@ -51,8 +51,8 @@ torch.backends.cudnn.deterministic = True
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-num_steps = 100
-total_timesteps = int(2e7)
+num_steps = 1000
+total_timesteps = int(2e6)
 num_envs = 20
 single_observation_space = 33
 single_action_space = 4
@@ -85,7 +85,7 @@ rewards = torch.zeros((num_steps, num_envs)).to(device)
 dones = torch.zeros((num_steps, num_envs)).to(device)
 values = torch.zeros((num_steps, num_envs)).to(device)
 
-env_info = env.reset(train_mode=True)[brain_name]      # reset the environment    
+env_info = env.reset(train_mode=train_mode)[brain_name]      # reset the environment    
 states = env_info.vector_observations                  # get the current state (for each agent)
 num_updates = total_timesteps // batch_size
 
@@ -95,7 +95,6 @@ num_updates = total_timesteps // batch_size
 
 global_step = 0
 scores_deque = deque(maxlen=2000)
-
 
 for update in range(1, num_updates + 1):
 
@@ -150,7 +149,7 @@ for update in range(1, num_updates + 1):
         scores_deque.append(i)
         records['scores'].append(i)
 
-    print('Step: {}\t\tAverage Score: {:.4f}'.format(int(global_step/(num_envs*num_steps)),np.mean(scores_deque)))
+    print('Step: {}\t\tAverage Score: {:.4f}'.format(update,np.mean(scores_deque)))
 
   
     # flatten the batch
@@ -237,6 +236,19 @@ torch.save(agent.critic.state_dict(), 'checkpoint_ppo_agent_critic.pth')
 
 import pandas as pd
 import matplotlib.pyplot as plt
+
+ppo_logs = pd.DataFrame({'learning_rate':records['learning_rate'],
+                         'value_loss':records['value_loss'],
+                         'policy_loss':records['policy_loss'],
+                         'entropy':records['entropy'],
+                         'old_approx_kl':records['old_approx_kl'],
+                         'approx_kl':records['approx_kl'],
+                         'clipfrac':records['clipfrac'],
+                         'explained_variance':records['explained_variance']})
+ppo_logs.to_csv('ppo_records_logs.csv')
+
+_scores = pd.DataFrame({'scores':records['scores']})
+_scores.to_csv('ddpg_scores_logs.csv')
 
 fig = plt.figure()
 ax = fig.add_subplot(111)
