@@ -3,7 +3,7 @@ import pdb
 
 train_mode = False
 
-env = UnityEnvironment(file_name=r"C:\\Users\\micha\\OneDrive\\Data Science\\Udacity\\Deep Reinforcement Learning\\continous-control-robot-arm\\reacher_v2\\Reacher.exe")
+env = UnityEnvironment(file_name=r"..\\reacher_v2\\Reacher.exe")
 
 # get the default brain
 brain_name = env.brain_names[0]
@@ -96,6 +96,7 @@ num_updates = total_timesteps // batch_size
 global_step = 0
 scores_deque = deque(maxlen=2000)
 
+
 for update in range(1, num_updates + 1):
 
     # Annealing the rate if instructed to do so.
@@ -147,6 +148,8 @@ for update in range(1, num_updates + 1):
     scores = np.sum(rewards.cpu().numpy(),axis=0)
     for i in scores:
         scores_deque.append(i)
+        records['scores'].append(i)
+
     print('Step: {}\t\tAverage Score: {:.4f}'.format(int(global_step/(num_envs*num_steps)),np.mean(scores_deque)))
 
   

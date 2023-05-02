@@ -1,3 +1,4 @@
+import json
 import torch
 import numpy as np
 import pandas as pd
@@ -49,7 +50,7 @@ ddpg_config.update_step = 20
 
 ## DDPG Params
 ddpg_config.buffer_size = int(5e5)  # replay buffer size
-ddpg_config.batch_size = 256        # minibatch size
+ddpg_config.batch_size = 128        # minibatch size
 ddpg_config.gamma = 0.99            # discount factor
 ddpg_config.tau = 1e-3              # for soft update of target parameters
 ddpg_config.lr_actor = 1e-4         # learning rate of the actor
@@ -61,6 +62,9 @@ ddpg_config.loss = 'l1_smooth'      # loss functions include 'mae' or 'mse'
 ddpg_config.theta = 0.15
 ddpg_config.sigma = 0.2
 ddpg_config.add_noise = True
+
+with open('ddpg_config.json', 'w') as f:
+    json.dump(ddpg_config, f)
 
 agent = Agent(ddpg_config)
 
@@ -116,8 +120,11 @@ for i_episode in range(1, n_episodes+1):
 
 #pdb.set_trace()
 
-logs = pd.DataFrame({'scores':scores,'actor_loss':eps_actor_loss, 'critic_loss':eps_critic_loss})
-logs.to_csv('logs.csv')
+logs = pd.DataFrame({'actor_loss':eps_actor_loss, 'critic_loss':eps_critic_loss})
+logs.to_csv('ddpg_loss_logs.csv')
+
+_scores = pd.DataFrame({'scores':scores})
+_scores.to_csv('ddpg_scores_logs.csv')
 
 fig = plt.figure()
 ax = fig.add_subplot(111)
