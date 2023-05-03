@@ -17,7 +17,7 @@ seed = 42
 
 train_mode = True
 
-env = UnityEnvironment(file_name=r"C:\\Users\\micha\\OneDrive\\Data Science\Udacity\\Deep Reinforcement Learning\\continous-control-robot-arm\\reacher_v2\\Reacher.exe")
+env = UnityEnvironment(file_name="reacher_v2/Reacher.exe")
 
 # get the default brain
 brain_name = env.brain_names[0]

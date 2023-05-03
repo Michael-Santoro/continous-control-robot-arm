@@ -3,7 +3,7 @@ import random
 import copy
 from collections import namedtuple, deque
 
-from model_ddpg import Actor, Critic
+from udacity_ddpg.model_ddpg import Actor, Critic
 
 import torch
 import torch.nn as nn

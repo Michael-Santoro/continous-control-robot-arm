@@ -3,7 +3,7 @@ import pdb
 
 train_mode = True
 
-env = UnityEnvironment(file_name=r"..\\reacher_v2\\Reacher.exe")
+env = UnityEnvironment(file_name="../reacher_v2/Reacher.exe")
 
 # get the default brain
 brain_name = env.brain_names[0]
@@ -33,7 +33,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-from ppo_agent import Agent
+from ppo_agent_newer_older import Agent
 
 seed_val = 42
 
@@ -52,7 +52,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 num_steps = 1000
-total_timesteps = int(2e6)
+total_timesteps = int(6e6)
 num_envs = 20
 single_observation_space = 33
 single_action_space = 4
@@ -95,6 +95,8 @@ num_updates = total_timesteps // batch_size
 
 global_step = 0
 scores_deque = deque(maxlen=2000)
+
+print(num_updates)
 
 for update in range(1, num_updates + 1):
 
