@@ -1,0 +1,1 @@
+{"state_size": 33, "action_size": 4, "seed": 42, "update_step": 20, "buffer_size": 500000, "batch_size": 128, "gamma": 0.99, "tau": 0.001, "lr_actor": 0.0001, "lr_critic": 0.001, "weight_decay": 0.0, "loss": "l1_smooth", "theta": 0.15, "sigma": 0.2, "add_noise": true}
